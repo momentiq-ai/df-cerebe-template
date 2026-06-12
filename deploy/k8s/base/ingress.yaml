@@ -1,0 +1,29 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: df-cerebe
+  # NOTE(verify): annotations are ingress-controller-specific. These assume an
+  # nginx ingress controller. Adjust for your cluster (GKE, Traefik, etc.).
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+    # NOTE(host): replace with your real hostname before deploy. Frontend serves
+    # the SPA; /api routes to the backend Service. The SPA calls the backend at
+    # VITE_API_BASE_URL (baked at build), so you can also split these onto two
+    # hostnames and drop the /api path rule. docs/notes.md.
+    - host: df-cerebe.example
+      http:
+        paths:
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: df-cerebe-backend
+                port: { number: 8787 }
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: df-cerebe-frontend
+                port: { number: 80 }

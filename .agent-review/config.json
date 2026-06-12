@@ -1,0 +1,86 @@
+{
+  "version": 2,
+  "critics": [
+    {
+      "id": "cursor-local-chief-engineer",
+      "name": "Cursor Local Critic",
+      "adapter": "cursor-sdk",
+      "required": false,
+      "runtime": "local",
+      "model": {
+        "id": "composer-2.5",
+        "params": [{ "id": "fast", "value": "false" }]
+      }
+    },
+    {
+      "id": "codex-local-chief-engineer",
+      "name": "Codex Local Critic",
+      "adapter": "codex-sdk",
+      "required": false,
+      "runtime": "local",
+      "model": {
+        "id": "gpt-5.5",
+        "params": [{ "id": "reasoning_effort", "value": "high" }]
+      }
+    }
+  ],
+  "profiles": {
+    "local": {
+      "criticIds": ["cursor-local-chief-engineer", "codex-local-chief-engineer"],
+      "quorum": 1,
+      "auth": {
+        "codex-local-chief-engineer": "chatgpt"
+      }
+    }
+  },
+  "aggregation": {
+    "policy": "min-complete-quorum",
+    "blockingSeverities": ["blocker", "high"],
+    "quorum": 2
+  },
+  "git": {
+    "hookPath": ".husky",
+    "artifactDir": "agent-reviews",
+    "artifactScope": "git-common-dir"
+  },
+  "policy": {
+    "blockOnMissingReview": false,
+    "blockOnReviewError": false,
+    "allowEmergencyBypass": true,
+    "postCommitMode": "async"
+  },
+  "context": {
+    "guidanceFiles": ["CLAUDE.md"],
+    "promptFragments": [".agent-review/prompts/local-critic.md"],
+    "maxChangedFileBytes": 200000,
+    "includeFullChangedFiles": true
+  },
+  "validation": {
+    "runBeforeReview": false,
+    "resultFile": "agent-reviews/quality-gates/latest.json",
+    "requiredQualityGates": [],
+    "optionalQualityGates": [],
+    "verificationRoutes": [
+      {
+        "id": "docs-only",
+        "trigger": ["**/*.md", "docs/**", "**/CHANGELOG*"],
+        "command": null,
+        "evidencePath": null,
+        "category": "docs",
+        "exclusive": true
+      }
+    ]
+  },
+  "security": {
+    "redactSecretsInDiagnostics": true,
+    "treatDiffAsUntrustedInput": true
+  },
+  "tdd": {
+    "classifier": {
+      "productionGlobs": [],
+      "testGlobs": [],
+      "exclusionGlobs": ["**/*.md", "docs/**", "**/dist/**", "**/node_modules/**", "**/*.lock"],
+      "justificationTrailer": "Tdd-Justification"
+    }
+  }
+}

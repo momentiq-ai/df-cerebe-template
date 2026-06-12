@@ -1,0 +1,32 @@
+/* DF Cerebe dashboard — global tokens + base. Dark, professional, minimal. */
+:root {
+  --bg: #0b0e14;
+  --surface: #141a24;
+  --border: #232b38;
+  --text: #e6edf3;
+  --muted: #8b97a7;
+  --accent: #4f8cff;
+  --ok: #56d364;
+  --err: #ff6b6b;
+  --code-bg: #1c2330;
+
+  color-scheme: dark;
+  font-family:
+    system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+  background: var(--bg);
+  color: var(--text);
+}
+
+#app {
+  height: 100%;
+}

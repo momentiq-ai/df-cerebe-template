@@ -1,0 +1,37 @@
+#!/usr/bin/env sh
+# Dark Factory — block push if the pushed HEAD has unresolved blockers.
+# Source: CONSUMER-ADOPTION.md §5. Reads git's pre-push protocol on stdin.
+# POSIX sh: husky v9 runs hooks via `sh -e` (dash on Debian/Ubuntu/WSL) — no
+# bashisms (no pipefail / [[ ]]). A failing pipefail here would block every push.
+set -eu
+
+CLI="./node_modules/.bin/df"
+
+# Capture pre-push stdin once so we can feed it to the CLI.
+STDIN_BUF="$(cat)"
+
+# Emergency bypass — logged to .git/agent-reviews/_runs.ndjson and surfaced by
+# `df stats`. Use ONLY for genuine emergencies / documented pre-existing failures.
+if [ -n "${AGENT_REVIEW_BYPASS:-}" ]; then
+  echo "df gate-push: BYPASSED — reason: ${AGENT_REVIEW_BYPASS}" >&2
+  COMMON_DIR="$(git rev-parse --git-common-dir 2>/dev/null || echo .git)"
+  TELEMETRY_FILE="${COMMON_DIR}/agent-reviews/_runs.ndjson"
+  mkdir -p "$(dirname "${TELEMETRY_FILE}")"
+  TS="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+  ESC_REASON=$(printf '%s' "${AGENT_REVIEW_BYPASS}" | tr -d '[:cntrl:]' | sed 's/\\/\\\\/g; s/"/\\"/g')
+  printf '{"ts":"%s","event":"gate_bypassed","source":"pre-push-hook","reason":"%s"}\n' \
+    "${TS}" "${ESC_REASON}" >> "${TELEMETRY_FILE}"
+  exit 0
+fi
+
+if [ ! -f "${CLI}" ]; then
+  echo "df gate-push: BLOCKED — CLI not installed at ${CLI}; run 'bun install'." >&2
+  echo "df gate-push: push with AGENT_REVIEW_BYPASS=\"reason\" only in genuine emergencies." >&2
+  exit 1
+fi
+
+# `df gate-push` gates ONLY the HEAD (final) commit of each push update.
+# Intermediate commits' per-SHA artifacts are iteration receipts (inspect with
+# `df findings --range <base>..<head>`) but do NOT influence the gate.
+# (No `pipefail` — the pipe's exit status is df gate-push's, which is what gates.)
+printf '%s' "${STDIN_BUF}" | "${CLI}" gate-push

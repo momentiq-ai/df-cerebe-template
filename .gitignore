@@ -1,0 +1,34 @@
+# --- deps / build ---
+node_modules/
+dist/
+build/
+.svelte-kit/
+*.tsbuildinfo
+
+# --- local data (sqlite transcript store; docs/design §7.5) ---
+*.db
+*.db-wal
+*.db-shm
+data/
+
+# --- secrets (NEVER commit) ---
+# Local dev reads .env directly; Doppler injects in prod. Only .env.example is tracked.
+.env
+.env.*
+!.env.example
+.doppler/
+
+# --- bun ---
+# NOTE: bun.lockb (or bun.lock) MUST be committed — the Dark Factory contract
+# requires a committed lockfile so CI installs the exact same CLI version.
+# It is intentionally NOT ignored here. (See docs/getting-started.md, Step 1.)
+
+# --- dark factory artifacts ---
+# Per-SHA review artifacts live under .git/agent-reviews/ (inside .git, so already
+# untracked). Nothing to add here, but listed for the reader's mental model.
+
+# --- editor / OS ---
+.DS_Store
+.idea/
+.vscode/*
+!.vscode/extensions.json

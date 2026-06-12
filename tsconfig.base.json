@@ -1,0 +1,25 @@
+{
+  "//": "Shared TypeScript base. backend/ frontend/ shared/ each extend this.",
+  "//sota": "Targets/lib are set for a Bun + modern-browser world. Verify against the TS version you install (docs/notes.md tracks the pin).",
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "lib": ["ESNext"],
+    "types": ["bun-types"],
+
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    "exactOptionalPropertyTypes": true,
+
+    "verbatimModuleSyntax": true,
+    "isolatedModules": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+
+    "declaration": true,
+    "noEmit": true
+  }
+}

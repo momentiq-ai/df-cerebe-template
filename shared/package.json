@@ -1,0 +1,17 @@
+{
+  "name": "@df-cerebe/shared",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Types shared between the Hono backend and the Svelte frontend — the payoff of TS-on-both-sides. Edit a shape here, both sides re-type-check.",
+  "main": "src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "type-check": "tsc -p tsconfig.json --noEmit"
+  },
+  "devDependencies": {
+    "typescript": "6.0.3"
+  }
+}

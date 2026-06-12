@@ -1,0 +1,29 @@
+{
+  "name": "@df-cerebe/backend",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Hono + LangGraph.js agent backend. Runs natively under Bun in dev (no Docker).",
+  "scripts": {
+    "dev": "bun --env-file ../.env --hot src/index.ts",
+    "start": "bun --env-file ../.env src/index.ts",
+    "type-check": "tsc -p tsconfig.json --noEmit"
+  },
+  "//deps-note": "Versions PINNED EXACTLY and verified by a real install on 2026-06-11. The agent drives Cerebe (Momentiq's cognitive engine) via its OpenAI-compatible endpoint through @langchain/openai — verified live (streamed a real completion). To use raw Anthropic instead, `bun add @langchain/anthropic` and swap graph.ts (notes §4). `zod` is a required peer of @langchain/langgraph 1.x. Template stays uninstalled.",
+  "dependencies": {
+    "@cerebe/sdk": "0.4.0",
+    "@clerk/backend": "3.6.1",
+    "@langchain/core": "1.1.48",
+    "@langchain/langgraph": "1.4.1",
+    "@langchain/openai": "1.4.7",
+    "@libsql/client": "0.17.3",
+    "@df-cerebe/shared": "workspace:*",
+    "drizzle-orm": "0.45.2",
+    "hono": "4.12.25",
+    "zod": "4.4.3"
+  },
+  "devDependencies": {
+    "drizzle-kit": "0.31.10",
+    "typescript": "6.0.3"
+  }
+}

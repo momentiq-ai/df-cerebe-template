@@ -1,0 +1,31 @@
+# DF Cerebe k8s base — DEPLOY ONLY. Apply with: kubectl apply -k deploy/k8s/base
+# Chose plain manifests + kustomize over Helm: lighter, no templating language,
+# readable. Swap to a Helm chart only if your target cluster standardizes on it
+# (docs/notes.md). Nothing here is touched during local dev.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: df-cerebe
+
+resources:
+  - namespace.yaml
+  - backend-deployment.yaml
+  - backend-pvc.yaml          # SQLite transcript store volume (docs/design §7.5)
+  - backend-service.yaml
+  - frontend-deployment.yaml
+  - frontend-service.yaml
+  - ingress.yaml
+
+# NOTE(secrets): the backend reads CEREBE_API_KEY / CLERK_SECRET_KEY from a
+# Secret named `df-cerebe-secrets` (referenced in backend-deployment.yaml). Create
+# it out-of-band — DO NOT commit secrets. Either:
+#   kubectl create secret generic df-cerebe-secrets -n df-cerebe \
+#     --from-literal=CEREBE_API_KEY=... --from-literal=CLERK_SECRET_KEY=...
+# or sync from Doppler with the Doppler k8s operator. docs/notes.md.
+
+# NOTE(images): bump these tags as part of your deploy step (CI or by hand).
+images:
+  - name: df-cerebe-backend
+    newTag: local
+  - name: df-cerebe-frontend
+    newTag: local

@@ -1,0 +1,28 @@
+{
+  "name": "@df-cerebe/frontend",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Vite + Svelte SPA dashboard. Pure static build — no Node server, no Vercel. Talks to the Hono backend over HTTP/SSE.",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "type-check": "svelte-check --tsconfig ./tsconfig.json"
+  },
+  "//deps-note": "Versions PINNED EXACTLY and verified by a real install on 2026-06-11 (vite 8 ↔ plugin-svelte 7 ↔ svelte 5 ↔ svelte-check 4; @clerk/clerk-js for auth — the official framework-agnostic SDK, no Svelte wrapper needed). Chat UI renders markdown with marked + DOMPurify ({@html}) + highlight.js (docs/design §6.3); all three ship their own TS types. Template stays uninstalled; your `bun install` brings these in.",
+  "dependencies": {
+    "@clerk/clerk-js": "6.16.0",
+    "@df-cerebe/shared": "workspace:*",
+    "dompurify": "3.4.9",
+    "highlight.js": "11.11.1",
+    "marked": "18.0.5"
+  },
+  "devDependencies": {
+    "svelte": "5.56.3",
+    "vite": "8.0.16",
+    "@sveltejs/vite-plugin-svelte": "7.1.2",
+    "svelte-check": "4.6.0",
+    "typescript": "6.0.3"
+  }
+}

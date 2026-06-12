@@ -1,0 +1,37 @@
+#!/usr/bin/env sh
+# Dark Factory — background critic review for HEAD.
+# Source: CONSUMER-ADOPTION.md §5. Fires after every commit, non-blocking.
+# POSIX sh: husky v9 runs hooks via `sh -e` (dash on Debian/Ubuntu/WSL), so the
+# shebang is advisory only — no bashisms (no pipefail / [[ ]] / disown / substr).
+set -eu
+
+if [ "${AGENT_REVIEW_SKIP:-}" = "1" ]; then
+  echo "df review: skipped by AGENT_REVIEW_SKIP=1"
+  exit 0
+fi
+
+CLI="./node_modules/.bin/df"
+if [ ! -x "${CLI}" ]; then
+  echo "df review: CLI not installed at ${CLI}; run 'bun install' first" >&2
+  exit 0   # don't block commits; just warn
+fi
+
+COMMON_DIR="$(git rev-parse --git-common-dir 2>/dev/null || echo .git)"
+mkdir -p "${COMMON_DIR}/agent-reviews"
+LOG_FILE="${COMMON_DIR}/agent-reviews/post-commit.log"
+
+# Capture SHA at hook time, NOT in the background process. If two commits land
+# before the background process starts, a literal "HEAD" would resolve to the
+# SECOND commit and the first would never get an artifact — pre-push then blocks
+# on missing-review.
+SHA="$(git rev-parse HEAD)"
+SHORT_SHA="$(git rev-parse --short=12 HEAD 2>/dev/null || echo "${SHA}")"
+
+# Pin the `local` profile so we use Cursor/Codex SUBSCRIPTIONS
+# (per .agent-review/config.json → profiles.local.auth), not API keys.
+# nohup + `&` detaches the review so it outlives this hook (no bash `disown`).
+AGENT_REVIEW_PROFILE=local nohup "${CLI}" review --commit "${SHA}" \
+  >"${LOG_FILE}" 2>&1 \
+  </dev/null &
+
+echo "df review: critic started for ${SHORT_SHA} (log: ${LOG_FILE})"

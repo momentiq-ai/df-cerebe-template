@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: df-cerebe-frontend
+  labels: { app: df-cerebe-frontend }
+spec:
+  replicas: 1
+  selector:
+    matchLabels: { app: df-cerebe-frontend }
+  template:
+    metadata:
+      labels: { app: df-cerebe-frontend }
+    spec:
+      containers:
+        - name: frontend
+          image: df-cerebe-frontend   # tag set by kustomization.yaml `images:`
+          ports:
+            - containerPort: 80
+          # No env here: VITE_* vars were baked into the static bundle at BUILD
+          # time (see frontend.Dockerfile). nginx just serves files.
+          readinessProbe:
+            httpGet: { path: /, port: 80 }
+            initialDelaySeconds: 2

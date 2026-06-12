@@ -1,0 +1,14 @@
+# Bun workspace configuration.
+# Bun reads .env from CWD automatically — but in a workspace, each sub-package's
+# CWD is its own dir, not the root. So the backend/frontend dev scripts use
+# `--env-file ../.env` to point at the root .env. No dotenv needed.
+
+[install]
+# Use exact versions in lockfile for reproducible installs (matches the
+# Dark Factory "two paths converge on the same pin" requirement).
+exact = false
+
+# NOTE(verify): if you later run the backend under Node instead of Bun
+# (e.g. a dependency in the LangGraph tree misbehaves on Bun — see
+# docs/notes.md "Bun compatibility"), nothing here changes; Node reads the
+# same package.json. This file only affects Bun's own behavior.

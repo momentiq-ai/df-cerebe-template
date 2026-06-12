@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: df-cerebe-backend
+  labels: { app: df-cerebe-backend }
+spec:
+  # Default: single replica with local SQLite (DATABASE_URL=file:/data/df-cerebe.db).
+  # For horizontal scaling, point DATABASE_URL at a Turso instance, set
+  # TURSO_AUTH_TOKEN in df-cerebe-secrets, drop the PVC + volumeMount, and bump
+  # replicas / switch to RollingUpdate.
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels: { app: df-cerebe-backend }
+  template:
+    metadata:
+      labels: { app: df-cerebe-backend }
+    spec:
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: df-cerebe-data
+      containers:
+        - name: backend
+          image: df-cerebe-backend   # tag set by kustomization.yaml `images:`
+          ports:
+            - containerPort: 8787
+          volumeMounts:
+            - name: data
+              mountPath: /data
+          env:
+            - name: PORT
+              value: "8787"
+            - name: NODE_ENV
+              value: "production"
+            - name: DATABASE_URL
+              value: "file:/data/df-cerebe.db"   # local SQLite on PVC; or libsql://... for Turso
+            - name: LLM_MODEL
+              value: "gpt-4o"   # Cerebe (OpenAI-style id); see docs/notes.md §3/§4
+          # Secrets injected from the `df-cerebe-secrets` Secret — must include
+          # CEREBE_API_KEY (+ CLERK_SECRET_KEY if auth is on). Created out-of-band;
+          # see kustomization.yaml NOTE. envFrom pulls every key as an env var.
+          envFrom:
+            - secretRef:
+                name: df-cerebe-secrets
+          # TODO(verify): wire real probes once /health is confirmed.
+          readinessProbe:
+            httpGet: { path: /health, port: 8787 }
+            initialDelaySeconds: 3
+          livenessProbe:
+            httpGet: { path: /health, port: 8787 }
+            initialDelaySeconds: 10
