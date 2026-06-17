@@ -205,11 +205,10 @@ the first `bun install`, exactly as designed.
 
 ## 15. Deep Cerebe integration (agent memory + chat UI)  ☐
 
-The current agent uses Cerebe for **chat only**. The Sage blueprint (studied via
-`taxpilot2a`) wires Cerebe **memory** into the turn (pre-turn recall + post-turn
-harvest) behind a ReAct agent, plus a richer chat UI. The full design + port plan
-is specified in **[`design/cerebe-agent-and-chat.md`](design/cerebe-agent-and-chat.md)**
-— this is the template's headline feature work. Implement per that doc's phases.
+The current agent uses Cerebe for **chat only**. The deeper integration wires
+Cerebe **memory** into the turn (pre-turn recall + post-turn harvest) behind a
+ReAct agent, plus a richer chat UI — the template's headline feature. The
+progress log below tracks the phases that are done.
 
 **Progress:** ☑ **Phase 1 done (2026-06-11)** — `@cerebe/sdk@0.4.0` surface
 verified against the real `.d.ts`+source, Cerebe memory client built at

@@ -1,5 +1,5 @@
 /**
- * Agent memory tools (docs/design/cerebe-agent-and-chat.md §4.3, Phase 3).
+ * Agent memory tools.
  *
  * Built by a factory that CLOSURE-CAPTURES `sessionId`/`entityId` so the LLM never
  * supplies scoping ids — it only chooses the query. The prebuilt ReAct agent calls

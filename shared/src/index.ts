@@ -55,7 +55,7 @@ export interface StoredMessage {
 
 /**
  * One Server-Sent Event the backend streams during a chat turn (typed-SSE-JSON,
- * one JSON object per `data:` frame — docs/design/cerebe-agent-and-chat.md §5).
+ * one JSON object per `data:` frame).
  * NOTE: keep this in sync with what the backend writes and what the frontend
  * parses — that sync is exactly what this package buys you.
  */

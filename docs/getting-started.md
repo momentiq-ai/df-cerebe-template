@@ -357,7 +357,7 @@ path if you don't have access to the hosted App.
 
    jobs:
      agent-critic:                       # job id MUST be 'agent-critic' (see note)
-       uses: SJBarras/dark-factory/.github/workflows/agent-critic.yml@<exact-commit-sha>
+       uses: <your-fork>/dark-factory/.github/workflows/agent-critic.yml@<exact-commit-sha>
        with:
          cli-version: '2.5.0'            # match the pin in package.json
          darkfactory_config_path: '.agent-review/config.json'
@@ -369,7 +369,7 @@ path if you don't have access to the hosted App.
    ```
 
    > **Two template-specific notes.** (a) Reference **your own fork**
-   > (`SJBarras/dark-factory`, shown above) rather than `momentiq-ai/dark-factory`
+   > (`<your-fork>/dark-factory`, shown above) rather than `momentiq-ai/dark-factory`
    > unless you have org access — calling another org's reusable workflow requires
    > its Actions access to be set to `organization`, which you may not control.
    > (b) **Do not** add the `cycle-doc-validation` job from the upstream example —
@@ -381,8 +381,8 @@ path if you don't have access to the hosted App.
    ones for the critics you run (others degrade gracefully via min-complete-quorum):
 
    ```bash
-   gh secret set CURSOR_API_KEY --repo SJBarras/<your-repo>
-   gh secret set CODEX_API_KEY  --repo SJBarras/<your-repo>
+   gh secret set CURSOR_API_KEY --repo <your-org>/<your-repo>
+   gh secret set CODEX_API_KEY  --repo <your-org>/<your-repo>
    ```
 
 ### Make it binding (both paths)
@@ -392,7 +392,7 @@ ruleset does. Create one requiring the check to be green and bot review threads
 resolved:
 
 ```bash
-gh api -X POST repos/SJBarras/<your-repo>/rulesets --input main-enforcement.json
+gh api -X POST repos/<your-org>/<your-repo>/rulesets --input main-enforcement.json
 ```
 
 In `main-enforcement.json`, require the **exact** status-check context string:

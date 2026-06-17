@@ -3,11 +3,11 @@
  *
  * Exposes ONLY what the agent turn needs: pre-turn `searchMemories`, post-turn
  * `harvestMemories`, and `addMemory` (used by the share/explicit-write tool).
- * Everything else in the SDK (knowledge graph, RAG, PLRE, prompts, …) is left
- * unwrapped on purpose — see docs/design/cerebe-agent-and-chat.md §1/§9.
+ * Everything else in the SDK (knowledge graph, retrieval, prompts, …) is left
+ * unwrapped on purpose.
  *
  * Surface verified against the real `@cerebe/sdk@0.4.0` `.d.ts` + source on
- * 2026-06-11 (docs/design §10.1). Notable facts baked in below:
+ * 2026-06-11. Notable facts baked in below:
  *   - Construction is `new Cerebe({ apiKey, project?, baseUrl? })`; the SDK reads
  *     CEREBE_API_KEY / CEREBE_PROJECT / CEREBE_BASE_URL from env as fallbacks.
  *   - `memory.harvest` takes NO `options:{enabled,max_memories}` (the Python

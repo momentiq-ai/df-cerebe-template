@@ -1,8 +1,8 @@
 /**
  * Chat turn orchestrator — wires Cerebe long-term memory around the agent run.
  *
- * This is the "agent remembers" layer (docs/design/cerebe-agent-and-chat.md §4.4,
- * Phase 2). It touches Cerebe at exactly two points, mirroring the Sage blueprint:
+ * This is the "agent remembers" layer. It touches Cerebe at exactly two points
+ * (pre-turn recall + post-turn harvest):
  *
  *   PRE-TURN  (read, blocking, NON-FATAL): cerebe.memory.search → inject the hits
  *             as a <memory_context> READ-ONLY system message ahead of the turn.

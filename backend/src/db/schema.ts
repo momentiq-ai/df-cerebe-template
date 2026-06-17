@@ -1,5 +1,5 @@
 /**
- * Conversation transcript schema (docs/design/cerebe-agent-and-chat.md §7.5).
+ * Conversation transcript schema.
  *
  * This stores the chat TRANSCRIPT for the UI (sidebar + survive a reload). It is
  * NOT the agent's memory — Cerebe owns memory. Two orthogonal stores joined by
